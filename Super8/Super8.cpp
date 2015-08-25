@@ -9,7 +9,6 @@
 #include "Chip8Engine.h"
 
 Chip8Engine * mChip8;
-uint64_t count = 0;
 
 int main(int argc, char **argv) {
 	// Set up render system and register input callbacks
@@ -20,7 +19,14 @@ int main(int argc, char **argv) {
 
 	// Initialize the Chip8 system and load the game into the memory  
 	mChip8->initialise();
-	mChip8->loadProgram("C:\\Shared\\chip8roms\\INVADERS");
+	mChip8->loadProgram("..\\chip8roms\\INVADERS");
+
+	uint64_t count = 0;
+	uint8_t randstate = 0;
+	for (int i = 0; i < 0x10; i++) {
+		randstate = rand() % 0x2;
+		mChip8->setKeyState(i, (KEY_STATE)randstate);
+	}
 
 	// Emulation loop
 	for (;;)
@@ -29,18 +35,16 @@ int main(int argc, char **argv) {
 		mChip8->emulateCycle();
 
 		// Store key press state (Press and Release). DEBUG
-		uint8_t randkey = rand() % 0x10;
-		uint8_t randstate = rand() % 0x2;
-		mChip8->setKeyState(randkey, (KEY_STATE)randstate);
-
-		// Print DEBUG
+		for (int i = 0; i < 0x10; i++) {
+			mChip8->setKeyState(i, (KEY_STATE)(mChip8->key->getKeyState(i) ^ 1));
+		}
+		//mChip8->DEBUG_printKeyState();
 		
-		
-		if (count % 100000 == 0) {
+		if (mChip8->checkDrawFlag()) {
 			mChip8->DEBUG_printCPUState();
 			mChip8->DEBUG_printSoundTimer();
 			mChip8->DEBUG_renderGFXText();
-			//mChip8->setDrawFlag(false);
+			mChip8->setDrawFlag(false);
 		}
 		count++;
 		

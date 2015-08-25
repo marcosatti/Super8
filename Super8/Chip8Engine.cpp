@@ -209,3 +209,12 @@ void Chip8Engine::DEBUG_printSoundTimer()
 {
 	if (timers->getSoundTimer() > 0) printf("\n\n*****BEEP!*****\n\n");
 }
+
+void Chip8Engine::DEBUG_printKeyState()
+{
+	printf("Key States: \n");
+	for (int i = 0; i < 0x10; i++) {
+		printf("Key[%x]: %u, ", i, key->getKeyState(i));
+	}
+	printf("\n\n");
+}

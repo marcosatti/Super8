@@ -4,6 +4,8 @@
 
 Chip8KeyEngine::Chip8KeyEngine()
 {
+	// Set all key states to 0.
+	memset(key, 0, NUM_KEYS);
 }
 
 

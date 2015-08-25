@@ -3,6 +3,8 @@
 #include <cstdint>
 #include <cstdlib>
 
+#define NUM_KEYS 0x10
+
 enum KEY_STATE {
 	UP = 0,
 	DOWN = 1
@@ -16,5 +18,5 @@ public:
 	void setKeyState(uint8_t keyindex, KEY_STATE state);
 	uint8_t getKeyState(uint8_t keyindex);
 private:
-	uint8_t key[0x10]; // Array to store 0 -> F key states.
+	uint8_t key[NUM_KEYS]; // Array to store 0 -> F key states.
 };

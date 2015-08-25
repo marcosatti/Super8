@@ -53,6 +53,7 @@ public:
 	void DEBUG_printCPUState();
 	void DEBUG_renderGFXText();
 	void DEBUG_printSoundTimer();
+	void DEBUG_printKeyState();
 
 private:
 	uint8_t * memory; // 4096 (0x1000) bytes of memory in total, assumed to be allocated before class initialisation.

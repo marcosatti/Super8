@@ -290,8 +290,7 @@ void Chip8Engine::handleOpcodeMSN_D() {
 		newpixeldata = memory[cpu.I + ypos]; // Get the first row of pixel data.
 		for (int xpos = 0; xpos < NUM_BITS_PER_BYTE; xpos++) { // Loop though the x-positions.
 			gfxarraypos = ((ypixel + ypos) * GFX_XRES) + (xpixel + xpos); // Calculate the gfx memory array position
-			newpixelbit = (newpixeldata & (0x80 >> xpos)) >> xpos; // Get the pixel bit value from within the 8-bit data. 
-														 // 0x01 = 0b00000001 ie: mask with a single bit on each xpos loop.
+			newpixelbit = (newpixeldata & (0x80 >> xpos)); // Get the pixel bit value from within the 8-bit data. (will be > 0 if there is a pixel)
 			if (newpixelbit != 0) { // Set new pixel only if there is data.
 				oldpixelbit = gfxmem[gfxarraypos]; // Get the previous pixel value (already in the form of 1 or 0).
 				if (oldpixelbit == 1) cpu.V[0xF] = 1; // Set VF to 1 if pixel will be unset (from specs, used for collision detection).
@@ -299,7 +298,7 @@ void Chip8Engine::handleOpcodeMSN_D() {
 			}
 		}
 	}
-
+	
 	setDrawFlag(true); // Set the draw flag to true.
 	incrementPC(); // Update PC by 2 bytes
 }
@@ -350,12 +349,16 @@ void Chip8Engine::handleOpcodeMSN_F() {
 	{
 		// 0xFX0A: A key press is awaited, then stored in Vx.
 		// TODO: Check if correct.
+		bool keypressed = false;
 		uint8_t vx = (opcode & 0x0F00) >> 8; // Need to bit shift by 8 to get to a single base16 digit.
-		for (int i = 0; i <= 0xF; i++) {
+		for (int i = 0; i < NUM_KEYS; i++) {
 			uint8_t keystate = key->getKeyState(i); // Get the keystate from the key object.
-			if (keystate) cpu.V[vx] = i; // Set Vx to the key pressed (0x0 -> 0xF).
-			else return; // If no key was pressed, check again next cycle (by not incrementing PC)
+			if (keystate) { 
+				cpu.V[vx] = i; // Set Vx to the key pressed (0x0 -> 0xF).
+				keypressed = true;
+			}
 		}
+		if (!keypressed) return; // Dont update PC if no key was pressed.
 		incrementPC(); // Update PC by 2 bytes
 		break;
 	}
