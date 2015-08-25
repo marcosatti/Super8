@@ -12,8 +12,6 @@
 #include "Chip8KeyEngine.h"
 
 #define NUM_V_REG 16 // 16 8-bit data registers from V0 -> VF
-#define NUM_KEYS_KEYPAD 16 // 16 valid keys from 0 -> F (hex)
-
 #define MEMORY_SZ 4096 // 4K of RAM (0x0000 -> 0x0FFF accessable)
 #define GFX_MEMORY_SZ 2048 // 2K of VRAM (64 x 32)
 #define GFX_XRES 64

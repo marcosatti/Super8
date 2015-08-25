@@ -19,7 +19,7 @@ int main(int argc, char **argv) {
 
 	// Initialize the Chip8 system and load the game into the memory  
 	mChip8->initialise();
-	mChip8->loadProgram("..\\chip8roms\\INVADERS");
+	mChip8->loadProgram("..\\chip8roms\\BRIX");
 
 	uint64_t count = 0;
 	uint8_t randstate = 0;
@@ -36,11 +36,12 @@ int main(int argc, char **argv) {
 
 		// Store key press state (Press and Release). DEBUG
 		for (int i = 0; i < 0x10; i++) {
-			mChip8->setKeyState(i, (KEY_STATE)(mChip8->key->getKeyState(i) ^ 1));
+			randstate = rand() % 0x2;
+			mChip8->setKeyState(i, (KEY_STATE)randstate);
 		}
 		//mChip8->DEBUG_printKeyState();
 		
-		if (mChip8->checkDrawFlag()) {
+		if (mChip8->checkDrawFlag() ) {
 			mChip8->DEBUG_printCPUState();
 			mChip8->DEBUG_printSoundTimer();
 			mChip8->DEBUG_renderGFXText();
